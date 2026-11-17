@@ -1,0 +1,173 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head><meta name="ms-sp-authoring-source" content="agent"><style data-sp-site-theme>:root{--colorBrandBackground:#0078d4;--colorBrandBackgroundHover:#106ebe;--colorBrandBackground2:#eff6fc;--colorBrandForeground1:#0078d4;--colorNeutralForeground1:#323130;--colorNeutralForeground2:#605e5c;--colorNeutralForegroundOnBrand:#ffffff;--colorNeutralBackground1:#ffffff;--colorNeutralBackground2:#faf9f8;--colorNeutralStroke1:#d2d0ce;--fontFamily:'Segoe UI', 'Segoe UI Web (West European)', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;}</style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aqua Green Shop – Fish & Plants</title>
+<style>
+:root{--blue:#0b3d91;--blue2:#1565c0;--teal:#00a6a6;--green:#2e7d32;--bg:#f2f7fb;--card:#fff;--txt:#1d2b3a;--muted:#6b7c8f}
+*{box-sizing:border-box;margin:0;padding:0;font-family:"Segoe UI",Arial,sans-serif}
+body{background:var(--bg);color:var(--txt)}
+header{background:linear-gradient(120deg,var(--blue),var(--teal));color:#fff;padding:18px 24px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10;box-shadow:0 2px 10px rgba(0,0,0,.2)}
+header h1{font-size:1.5rem}header small{display:block;opacity:.85;font-size:.8rem}
+.cartbtn{background:#fff;color:var(--blue);border:none;padding:10px 16px;border-radius:25px;font-weight:700;cursor:pointer;font-size:1rem}
+.cartbtn span{background:#e53935;color:#fff;border-radius:50%;padding:2px 8px;margin-left:6px;font-size:.8rem}
+.hero{text-align:center;padding:30px 20px 10px}.hero h2{color:var(--blue);font-size:1.7rem}.hero p{color:var(--muted);margin-top:6px}
+.filters{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;padding:15px}
+.filters button,.filters input{padding:9px 16px;border-radius:20px;border:1px solid #c5d3e0;background:#fff;cursor:pointer;font-size:.95rem}
+.filters button.active{background:var(--blue2);color:#fff;border-color:var(--blue2)}
+.filters input{min-width:220px;cursor:text}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px;padding:10px 24px 40px;max-width:1250px;margin:auto}
+.card{background:var(--card);border-radius:14px;overflow:hidden;box-shadow:0 3px 12px rgba(0,0,0,.08);display:flex;flex-direction:column;transition:.2s}
+.card:hover{transform:translateY(-4px);box-shadow:0 8px 20px rgba(0,0,0,.14)}
+.pic{height:130px;display:flex;align-items:center;justify-content:center;font-size:4rem}
+.pic.fish{background:linear-gradient(160deg,#bfe6ff,#4fa3e0)}.pic.plant{background:linear-gradient(160deg,#d8f5d0,#5cb85c)}
+.body{padding:14px;flex:1;display:flex;flex-direction:column}
+.tag{font-size:.7rem;font-weight:700;text-transform:uppercase;color:var(--teal)}
+.body h3{font-size:1.05rem;margin:4px 0}.body p{font-size:.85rem;color:var(--muted);flex:1}
+.price{font-size:1.15rem;font-weight:700;color:var(--blue);margin:8px 0}.stock{font-size:.75rem;color:var(--green)}
+.add{background:var(--blue2);color:#fff;border:none;padding:10px;border-radius:8px;cursor:pointer;font-weight:600;margin-top:6px}.add:hover{background:var(--blue)}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;z-index:20}
+.drawer{position:fixed;right:-460px;top:0;width:440px;max-width:100%;height:100%;background:#fff;z-index:30;transition:.3s;display:flex;flex-direction:column}
+.drawer.open{right:0}.overlay.open{display:block}
+.dhead{background:var(--blue);color:#fff;padding:16px;display:flex;justify-content:space-between;align-items:center}
+.dhead button{background:none;border:none;color:#fff;font-size:1.5rem;cursor:pointer}
+.items{flex:1;overflow:auto;padding:12px}
+.line{display:flex;gap:10px;align-items:center;border-bottom:1px solid #eee;padding:10px 0}.line .em{font-size:2rem}
+.line .info{flex:1}.line .info b{display:block;font-size:.9rem}.line .info small{color:var(--muted)}
+.qty{display:flex;align-items:center;gap:6px}.qty button{width:26px;height:26px;border-radius:50%;border:1px solid #bbb;background:#fff;cursor:pointer}
+.rm{color:#e53935;background:none;border:none;cursor:pointer;font-size:1.1rem}
+.totals{padding:14px;border-top:2px solid #eee;font-size:.95rem}.totals div{display:flex;justify-content:space-between;margin:3px 0}
+.totals .g{font-size:1.2rem;font-weight:700;color:var(--blue)}
+.buy{width:100%;background:var(--green);color:#fff;border:none;padding:14px;font-size:1.05rem;font-weight:700;border-radius:8px;cursor:pointer;margin-top:10px}
+.buy:disabled{background:#9e9e9e;cursor:not-allowed}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:40;padding:15px}.modal.open{display:flex}
+.box{background:#fff;border-radius:14px;max-width:560px;width:100%;max-height:92vh;overflow:auto;padding:22px}
+.box h2{color:var(--blue);margin-bottom:12px}.box label{display:block;font-size:.85rem;font-weight:600;margin-top:10px}
+.box input,.box textarea,.box select{width:100%;padding:10px;border:1px solid #c5d3e0;border-radius:8px;margin-top:4px;font-size:.95rem}
+.row{display:flex;gap:10px}.row>div{flex:1}
+.btns{display:flex;gap:10px;margin-top:16px}.btns button{flex:1;padding:12px;border-radius:8px;border:none;font-weight:700;cursor:pointer}
+.cancel{background:#eceff1}.confirm{background:var(--green);color:#fff}
+.po{border:2px solid var(--blue);border-radius:10px;padding:16px;font-size:.88rem}
+.po table{width:100%;border-collapse:collapse;margin:10px 0}.po th{background:var(--blue);color:#fff;padding:6px;font-size:.8rem}
+.po td{border-bottom:1px solid #ddd;padding:6px;text-align:center}
+.ok{background:#e8f5e9;color:var(--green);padding:10px;border-radius:8px;margin-bottom:12px;font-weight:600}
+.err{background:#ffebee;color:#c62828;padding:10px;border-radius:8px;margin-bottom:12px}
+.toast{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);background:#323232;color:#fff;padding:10px 20px;border-radius:25px;display:none;z-index:50}
+footer{text-align:center;padding:20px;background:var(--blue);color:#fff;font-size:.85rem}
+@media print{header,.filters,.grid,.hero,footer,.btns,.drawer,.overlay{display:none!important}.modal{position:static;display:block;background:none}.box{max-height:none}}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>🐠 Aqua Green Shop</h1><small>Live Fish • Aquatic Plants • Dubai, UAE</small></div>
+  <button class="cartbtn" id="openCart">🛒 Cart<span id="count">0</span></button>
+</header>
+<section class="hero"><h2>Healthy Fish & Fresh Aquatic Plants</h2><p>Select your items, add to cart and place your order – we will confirm by phone/email.</p></section>
+<div class="filters">
+  <button class="active" data-f="all">All</button><button data-f="fish">🐟 Fish</button><button data-f="plant">🌿 Plants</button>
+  <input id="search" placeholder="🔍 Search item...">
+</div>
+<div class="grid" id="grid"></div>
+<footer>© Aqua Green Shop • Prices in AED • Orders: amalbabu121@gmail.com</footer>
+
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer">
+  <div class="dhead"><h3>🛒 Your Cart</h3><button id="closeCart">×</button></div>
+  <div class="items" id="items"></div>
+  <div class="totals">
+    <div><span>Sub Total</span><span id="sub">AED 0.00</span></div>
+    <div><span>Delivery</span><span id="del">AED 0.00</span></div>
+    <div><span>VAT 5%</span><span id="vat">AED 0.00</span></div>
+    <div class="g"><span>Grand Total</span><span id="grand">AED 0.00</span></div>
+    <button class="buy" id="buyBtn">BUY NOW</button>
+  </div>
+</aside>
+
+<div class="modal" id="checkout"><div class="box">
+  <h2>Customer Details</h2>
+  <form id="custForm">
+    <label>Full Name *</label><input id="cName" required>
+    <div class="row"><div><label>Mobile *</label><input id="cPhone" required placeholder="+971 5X XXX XXXX"></div>
+    <div><label>Email *</label><input id="cEmail" type="email" required></div></div>
+    <label>Delivery Address *</label><textarea id="cAddr" rows="2" required></textarea>
+    <div class="row"><div><label>Emirate</label><select id="cCity"><option>Dubai</option><option>Sharjah</option><option>Abu Dhabi</option><option>Ajman</option><option>Ras Al Khaimah</option><option>Fujairah</option><option>Umm Al Quwain</option></select></div>
+    <div><label>Payment</label><select id="cPay"><option>Cash on Delivery</option><option>Bank Transfer</option><option>Card on Delivery</option></select></div></div>
+    <label>Notes</label><textarea id="cNote" rows="2"></textarea>
+    <div class="btns"><button type="button" class="cancel" id="cancelCo">Cancel</button><button type="submit" class="confirm" id="placeBtn">Place Order</button></div>
+  </form>
+</div></div>
+<div class="modal" id="poModal"><div class="box" id="poBox"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ===== CONFIGURATION ===== */
+const SHOP_NAME     = "Aqua Green Shop";
+const ORDER_EMAIL   = "amalbabu121@gmail.com";                 // purchase orders arrive here
+const WEB3FORMS_KEY = "54f707be-0ae4-4e2a-a4be-f04cc56d6c72";  // Web3Forms access key (linked to above email)
+const VAT_RATE      = 0.05;
+const DELIVERY      = 15;
+const FREE_DELIVERY_ABOVE = 200;
+
+/* ===== PRODUCT LIST ===== */
+const PRODUCTS = [
+ {id:"F01",type:"fish", em:"🐠",name:"Guppy (Pair)",        desc:"Colourful, hardy, ideal for beginners",price:10,stock:50},
+ {id:"F02",type:"fish", em:"🐟",name:"Neon Tetra",          desc:"Bright blue-red schooling fish",       price:5, stock:100},
+ {id:"F03",type:"fish", em:"🐡",name:"Betta (Male)",        desc:"Long fins, vibrant colours",           price:25,stock:20},
+ {id:"F04",type:"fish", em:"🐠",name:"Platy",               desc:"Peaceful community fish",              price:6, stock:60},
+ {id:"F05",type:"fish", em:"🐟",name:"Molly (Black)",       desc:"Easy care livebearer",                 price:7, stock:40},
+ {id:"F06",type:"fish", em:"🐠",name:"Angelfish",           desc:"Elegant, medium-size cichlid",         price:30,stock:15},
+ {id:"F07",type:"fish", em:"🐡",name:"Goldfish (Oranda)",   desc:"Classic cold-water fish",              price:35,stock:25},
+ {id:"F08",type:"fish", em:"🐟",name:"Corydoras",           desc:"Bottom cleaner, peaceful",             price:12,stock:30},
+ {id:"P01",type:"plant",em:"🌿",name:"Java Fern",           desc:"Low light, very easy",                 price:18,stock:30},
+ {id:"P02",type:"plant",em:"🌱",name:"Anubias Nana",        desc:"Attach to rock/wood, hardy",           price:22,stock:25},
+ {id:"P03",type:"plant",em:"🍀",name:"Amazon Sword",        desc:"Large background plant",               price:20,stock:20},
+ {id:"P04",type:"plant",em:"🌾",name:"Vallisneria (Bunch)", desc:"Tall grass-like background",           price:12,stock:40},
+ {id:"P05",type:"plant",em:"🌿",name:"Java Moss (Portion)", desc:"Great for shrimp & breeding",          price:15,stock:35},
+ {id:"P06",type:"plant",em:"🌱",name:"Cryptocoryne Wendtii",desc:"Mid-ground, low maintenance",          price:16,stock:25},
+ {id:"P07",type:"plant",em:"🪴",name:"Money Plant (Pothos)",desc:"Indoor plant, water/soil",             price:20,stock:30},
+ {id:"P08",type:"plant",em:"🍃",name:"Lucky Bamboo",        desc:"Indoor decorative plant",              price:25,stock:20}
+];
+
+const storage={getItem(k){try{return window.localStorage.getItem(k)}catch(e){return null}},setItem(k,v){try{window.localStorage.setItem(k,v)}catch(e){}}};
+let cart=JSON.parse(storage.getItem("aqua_cart")||"{}"),filter="all",term="";
+const $=id=>document.getElementById(id),fmt=n=>"AED "+n.toFixed(2),save=()=>storage.setItem("aqua_cart",JSON.stringify(cart));
+const toast=m=>{const t=$("toast");t.textContent=m;t.style.display="block";setTimeout(()=>t.style.display="none",1800)};
+function render(){$("grid").innerHTML=PRODUCTS.filter(p=>(filter==="all"||p.type===filter)&&p.name.toLowerCase().includes(term)).map(p=>`<div class="card"><div class="pic ${p.type}">${p.em}</div><div class="body"><span class="tag">${p.type==="fish"?"Live Fish":"Plant"} • ${p.id}</span><h3>${p.name}</h3><p>${p.desc}</p><div class="price">${fmt(p.price)}</div><span class="stock">✔ In stock: ${p.stock}</span><button class="add" onclick="addItem('${p.id}')">Add to Cart</button></div></div>`).join("")||"<p style='text-align:center;grid-column:1/-1'>No items found</p>"}
+function addItem(id){const p=PRODUCTS.find(x=>x.id===id),q=(cart[id]||0)+1;if(q>p.stock)return toast("Stock limit reached");cart[id]=q;save();renderCart();toast(p.name+" added ✔")}
+function changeQty(id,d){const p=PRODUCTS.find(x=>x.id===id);cart[id]=Math.min((cart[id]||0)+d,p.stock);if(cart[id]<=0)delete cart[id];save();renderCart()}
+function totals(){let sub=0;for(const id in cart)sub+=PRODUCTS.find(p=>p.id===id).price*cart[id];const del=sub===0||sub>=FREE_DELIVERY_ABOVE?0:DELIVERY,vat=(sub+del)*VAT_RATE;return{sub,del,vat,grand:sub+del+vat}}
+function renderCart(){const ids=Object.keys(cart);$("count").textContent=ids.reduce((a,i)=>a+cart[i],0);
+ $("items").innerHTML=ids.length?ids.map(id=>{const p=PRODUCTS.find(x=>x.id===id);return`<div class="line"><div class="em">${p.em}</div><div class="info"><b>${p.name}</b><small>${fmt(p.price)} each</small></div><div class="qty"><button onclick="changeQty('${id}',-1)">−</button>${cart[id]}<button onclick="changeQty('${id}',1)">+</button></div><b style="width:80px;text-align:right">${fmt(p.price*cart[id])}</b><button class="rm" onclick="changeQty('${id}',-999)">🗑</button></div>`}).join(""):"<p style='text-align:center;color:#888;margin-top:40px'>Your cart is empty</p>";
+ const t=totals();$("sub").textContent=fmt(t.sub);$("del").textContent=t.del?fmt(t.del):"FREE";$("vat").textContent=fmt(t.vat);$("grand").textContent=fmt(t.grand);$("buyBtn").disabled=!ids.length}
+function toggleCart(o){$("drawer").classList.toggle("open",o);$("overlay").classList.toggle("open",o)}
+function poNumber(){const d=new Date(),n=parseInt(storage.getItem("aqua_po")||"0")+1;storage.setItem("aqua_po",n);return`PO-${d.getFullYear()}${String(d.getMonth()+1).padStart(2,"0")}${String(d.getDate()).padStart(2,"0")}-${String(n).padStart(4,"0")}`}
+
+async function placeOrder(e){e.preventDefault();
+ const c={name:$("cName").value.trim(),phone:$("cPhone").value.trim(),email:$("cEmail").value.trim(),addr:$("cAddr").value.trim(),city:$("cCity").value,pay:$("cPay").value,note:$("cNote").value.trim()};
+ const po=poNumber(),date=new Date().toLocaleString("en-GB"),t=totals();
+ const lines=Object.keys(cart).map((id,i)=>{const p=PRODUCTS.find(x=>x.id===id);return{sn:i+1,code:id,name:p.name,qty:cart[id],rate:p.price,amt:p.price*cart[id]}});
+ let itemsTxt="";lines.forEach(l=>itemsTxt+=`${l.sn}. [${l.code}] ${l.name}  x ${l.qty}  @ AED ${l.rate.toFixed(2)}  = AED ${l.amt.toFixed(2)}\n`);
+ let txt=`PURCHASE ORDER – ${SHOP_NAME}\nPO No: ${po}\nDate: ${date}\n\nCUSTOMER\nName: ${c.name}\nMobile: ${c.phone}\nEmail: ${c.email}\nAddress: ${c.addr}, ${c.city}\nPayment: ${c.pay}\nNotes: ${c.note||"-"}\n\nITEMS\n${itemsTxt}\nSub Total: ${fmt(t.sub)}\nDelivery: ${t.del?fmt(t.del):"FREE"}\nVAT ${VAT_RATE*100}%: ${fmt(t.vat)}\nGRAND TOTAL: ${fmt(t.grand)}`;
+ $("placeBtn").disabled=true;$("placeBtn").textContent="Sending...";let sent=false,errMsg="";
+ sent=false;errMsg="This preview cannot send network requests";
+ $("placeBtn").disabled=false;$("placeBtn").textContent="Place Order";
+ const mailto=`mailto:${ORDER_EMAIL}?subject=${encodeURIComponent("Purchase Order "+po)}&body=${encodeURIComponent(txt)}`;
+ $("poBox").innerHTML=`${sent?`<div class="ok">✔ Thank you! Your order has been placed and the purchase order has been sent.</div>`:`<div class="err">⚠ Automatic email could not be sent${errMsg?" ("+errMsg+")":""}. Please click "Send by Email" below.</div>`}
+ <div class="po"><h2 style="color:var(--blue)">PURCHASE ORDER</h2><b>${SHOP_NAME}</b><br>PO No: <b>${po}</b><br>Date: ${date}<hr style="margin:8px 0">
+ <b>Customer:</b> ${c.name}<br>📞 ${c.phone} • ✉ ${c.email}<br>📍 ${c.addr}, ${c.city}<br>Payment: ${c.pay}${c.note?`<br>Notes: ${c.note}`:""}
+ <table><tr><th>#</th><th>Code</th><th>Item</th><th>Qty</th><th>Rate</th><th>Amount</th></tr>${lines.map(l=>`<tr><td>${l.sn}</td><td>${l.code}</td><td style="text-align:left">${l.name}</td><td>${l.qty}</td><td>${l.rate.toFixed(2)}</td><td>${l.amt.toFixed(2)}</td></tr>`).join("")}</table>
+ <div style="text-align:right">Sub Total: ${fmt(t.sub)}<br>Delivery: ${t.del?fmt(t.del):"FREE"}<br>VAT ${VAT_RATE*100}%: ${fmt(t.vat)}<br><b style="font-size:1.1rem;color:var(--blue)">Grand Total: ${fmt(t.grand)}</b></div></div>
+ <div class="btns"><button class="cancel" onclick="window.print()">🖨 Print / PDF</button><button class="confirm" style="background:var(--blue2)" id="mailBtn">✉ Send by Email</button><button class="confirm" onclick="$('poModal').classList.remove('open')">Done</button></div>`;
+ $("mailBtn").onclick=()=>location.href=mailto;
+ $("checkout").classList.remove("open");$("poModal").classList.add("open");
+ if(sent){cart={};save();renderCart();$("custForm").reset()}
+}
+document.querySelectorAll(".filters button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".filters button").forEach(x=>x.classList.remove("active"));b.classList.add("active");filter=b.dataset.f;render()});
+$("search").oninput=e=>{term=e.target.value.toLowerCase();render()};
+$("openCart").onclick=()=>toggleCart(true);$("closeCart").onclick=()=>toggleCart(false);$("overlay").onclick=()=>toggleCart(false);
+$("buyBtn").onclick=()=>{toggleCart(false);$("checkout").classList.add("open")};$("cancelCo").onclick=()=>$("checkout").classList.remove("open");
+$("custForm").addEventListener("submit",placeOrder);render();renderCart();
+</script>
+</body>
+</html>
